@@ -1047,14 +1047,35 @@
   function parseResponse(text) {
     const sections = { praise: '', improve: '', tip: '' };
 
-    // "1." 또는 "## 1." 또는 "칭찬" 패턴 찾기
-    const praiseMatch = text.match(/(?:##?\s*1[.\s]|칭찬|잘한\s*점)([\s\S]*?)(?=##?\s*2[.\s]|보완|더\s*관찰|$)/i);
-    const improveMatch = text.match(/(?:##?\s*2[.\s]|보완|더\s*관찰)([\s\S]*?)(?=##?\s*3[.\s]|다음\s*탐구|제안|$)/i);
-    const tipMatch = text.match(/(?:##?\s*3[.\s]|다음\s*탐구|제안)([\s\S]*?)$/i);
+    // 섹션 구분자 위치 찾기
+    const markers = [
+      { key: 'praise', patterns: [/##?\s*1[\.\s:：]/, /칭찬/, /잘한\s*점/, /\*\*1\./] },
+      { key: 'improve', patterns: [/##?\s*2[\.\s:：]/, /보완/, /더\s*관찰/, /부족한/, /\*\*2\./] },
+      { key: 'tip', patterns: [/##?\s*3[\.\s:：]/, /다음\s*탐구/, /제안/, /\*\*3\./] },
+    ];
 
-    if (praiseMatch) sections.praise = praiseMatch[1].trim();
-    if (improveMatch) sections.improve = improveMatch[1].trim();
-    if (tipMatch) sections.tip = tipMatch[1].trim();
+    const lines = text.split('\n');
+    let currentKey = null;
+    let buffer = [];
+
+    for (const line of lines) {
+      let matched = false;
+      for (const marker of markers) {
+        if (marker.patterns.some(p => p.test(line))) {
+          // 이전 버퍼 저장
+          if (currentKey) sections[currentKey] = buffer.join('\n').trim();
+          currentKey = marker.key;
+          buffer = [];
+          matched = true;
+          break;
+        }
+      }
+      if (!matched && currentKey) {
+        buffer.push(line);
+      }
+    }
+    // 마지막 버퍼 저장
+    if (currentKey) sections[currentKey] = buffer.join('\n').trim();
 
     return sections;
   }
