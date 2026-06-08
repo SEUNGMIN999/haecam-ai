@@ -916,17 +916,24 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            model: 'gpt-4o',
+            model: 'claude-sonnet-4-5',
             max_tokens: 2000,
             messages: [
               {
                 role: 'user',
                 content: [
                   {
-                    type: 'image_url',
-                    image_url: { url: `data:${mimeType};base64,${base64}` }
+                    type: 'image',
+                    source: {
+                      type: 'base64',
+                      media_type: mimeType,
+                      data: base64
+                    }
                   },
-                  { type: 'text', text: prompt }
+                  {
+                    type: 'text',
+                    text: prompt
+                  }
                 ]
               }
             ]
@@ -941,7 +948,7 @@
 
       const data = await response.json();
       console.log('Worker 응답:', JSON.stringify(data).slice(0, 200));
-      const text = data?.choices?.[0]?.message?.content || '';
+      const text = data?.content?.[0]?.text || '';
 
       if (!text) {
         const errMsg = data?.error?.message || data?.candidates?.[0]?.finishReason || '응답을 받지 못했어요.';
