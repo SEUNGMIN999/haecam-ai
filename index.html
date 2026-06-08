@@ -916,21 +916,20 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{
-              parts: [
-                {
-                  inline_data: {
-                    mime_type: mimeType,
-                    data: base64
-                  }
-                },
-                { text: prompt }
-              ]
-            }],
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 8192
-            }
+            model: 'gpt-4o',
+            max_tokens: 2000,
+            messages: [
+              {
+                role: 'user',
+                content: [
+                  {
+                    type: 'image_url',
+                    image_url: { url: `data:${mimeType};base64,${base64}` }
+                  },
+                  { type: 'text', text: prompt }
+                ]
+              }
+            ]
           })
         }
       );
@@ -942,7 +941,7 @@
 
       const data = await response.json();
       console.log('Worker 응답:', JSON.stringify(data).slice(0, 200));
-      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      const text = data?.choices?.[0]?.message?.content || '';
 
       if (!text) {
         const errMsg = data?.error?.message || data?.candidates?.[0]?.finishReason || '응답을 받지 못했어요.';
