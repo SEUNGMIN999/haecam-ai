@@ -8,823 +8,445 @@
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Gaegu:wght@400;700&display=swap');
 
   :root {
-    --green: #2d8a4e;
-    --green-light: #e8f5ed;
-    --green-mid: #a8d5b5;
-    --teal: #1a9e8f;
-    --teal-light: #e0f5f3;
-    --yellow: #f5c842;
-    --yellow-light: #fffbe6;
-    --orange: #f07b3f;
-    --red-soft: #f87171;
-    --bg: #f0f7f2;
-    --white: #ffffff;
-    --text: #1a2e22;
-    --text-mid: #4a6655;
-    --text-light: #8aab96;
-    --border: #c5e0ce;
-    --shadow: 0 4px 20px rgba(45,138,78,0.12);
-    --shadow-lg: 0 8px 40px rgba(45,138,78,0.18);
+    --g1: #1B6B3A; --g2: #2E8B57; --g3: #EEF7F2; --g4: #C8E6D4;
+    --t1: #0D9488; --t2: #E0F5F3;
+    --y1: #F59E0B; --y2: #FFF9E6;
+    --bg: #F4F9F6; --surface: #fff;
+    --border: #DDE9E3; --border2: #C8D9D1;
+    --text: #0F1F17; --text2: #4A6655; --text3: #93B09E;
+    --r1: 12px; --r2: 20px; --r3: 28px;
+    --sh: 0 2px 16px rgba(27,107,58,0.10);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* 배경 장식 */
-  body::before {
-    content: '';
-    position: fixed;
-    top: -200px; right: -200px;
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(45,138,78,0.08) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* 헤더 */
   header {
-    background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
-    padding: 28px 24px 32px;
+    background: var(--g1);
+    padding: 36px 24px 48px;
     text-align: center;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(45,138,78,0.3);
   }
-
   header::before {
     content: '';
-    position: absolute;
-    top: -60px; left: -60px;
-    width: 200px; height: 200px;
+    position: absolute; top: -60px; right: -60px;
+    width: 220px; height: 220px;
     background: rgba(255,255,255,0.06);
     border-radius: 50%;
   }
   header::after {
     content: '';
-    position: absolute;
-    bottom: -80px; right: -40px;
-    width: 250px; height: 250px;
-    background: rgba(255,255,255,0.05);
+    position: absolute; bottom: -80px; left: -40px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.04);
     border-radius: 50%;
   }
-
-  .header-emoji {
-    font-size: 48px;
-    display: block;
-    margin-bottom: 8px;
-    animation: float 3s ease-in-out infinite;
+  .header-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.95);
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    padding: 5px 14px; border-radius: 100px;
+    margin-bottom: 14px; position: relative; z-index: 1;
   }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
-
   header h1 {
     font-family: 'Gaegu', cursive;
-    font-size: 30px;
-    font-weight: 700;
-    color: white;
-    letter-spacing: -0.5px;
-    position: relative;
-    z-index: 1;
+    font-size: 28px; font-weight: 700;
+    color: #fff; letter-spacing: -0.3px;
+    margin-bottom: 8px; position: relative; z-index: 1;
   }
+  header p { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.6; position: relative; z-index: 1; }
 
-  header p {
-    font-size: 14px;
-    color: rgba(255,255,255,0.85);
-    margin-top: 6px;
-    position: relative;
-    z-index: 1;
+  .container { max-width: 560px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r3);
+    padding: 22px;
+    margin-bottom: 16px;
+    box-shadow: var(--sh);
   }
-
-  /* 메인 컨테이너 */
-  .container {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 24px 16px 60px;
-    position: relative;
-    z-index: 1;
+  .section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700;
+    color: var(--text2); letter-spacing: 0.3px;
+    margin-bottom: 16px;
   }
-
-  /* API 키 섹션 */
-  .api-section {
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-    border: 1.5px solid var(--border);
-  }
-
-  .section-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-mid);
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .section-label .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--green);
-  }
-
-  .api-input-row {
-    display: flex;
-    gap: 10px;
-  }
-
-  input[type="password"], input[type="text"] {
-    flex: 1;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 16px;
-    font-size: 14px;
-    font-family: 'Noto Sans KR', sans-serif;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    background: var(--bg);
-    color: var(--text);
-  }
-
-  input:focus {
-    border-color: var(--green);
-    box-shadow: 0 0 0 3px rgba(45,138,78,0.12);
-    background: white;
-  }
-
-  .btn-save {
-    padding: 12px 20px;
-    background: var(--green);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 13px;
-    font-weight: 700;
-    font-family: 'Noto Sans KR', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-
-  .btn-save:hover {
-    background: #236e3e;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(45,138,78,0.3);
-  }
-
-  .api-status {
-    margin-top: 8px;
-    font-size: 12px;
-    color: var(--text-light);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .api-status.ok { color: var(--green); }
-
-  /* 업로드 카드 */
-  .upload-card {
-    background: white;
-    border-radius: 24px;
-    padding: 28px 24px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-    border: 2px dashed var(--green-mid);
-    transition: all 0.3s;
-  }
-
-  .upload-card.dragover {
-    border-color: var(--green);
-    background: var(--green-light);
-    transform: scale(1.01);
-  }
+  .section-title .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--g1); }
 
   .upload-zone {
+    border: 2px dashed var(--border2);
+    border-radius: var(--r2);
+    padding: 32px 20px;
     text-align: center;
+    transition: all 0.2s;
     cursor: pointer;
   }
+  .upload-zone.dragover { border-color: var(--g1); background: var(--g3); }
+  .upload-zone:hover { border-color: var(--g2); }
 
-  .upload-icon {
-    font-size: 64px;
-    display: block;
-    margin-bottom: 12px;
-    filter: grayscale(0);
-    transition: transform 0.3s;
+  .upload-emoji-ring {
+    width: 64px; height: 64px;
+    background: var(--g3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; margin: 0 auto 16px;
+    border: 3px solid var(--g4);
   }
+  .upload-zone h2 { font-family: 'Gaegu', cursive; font-size: 22px; color: var(--text); margin-bottom: 6px; }
+  .upload-zone p { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 20px; }
 
-  .upload-card:hover .upload-icon {
-    transform: scale(1.1) rotate(-5deg);
+  .upload-btn-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 14px; }
+  .btn-cam {
+    flex: 1; max-width: 150px;
+    padding: 12px 16px;
+    background: var(--g1); color: #fff;
+    border: none; border-radius: 14px;
+    font-size: 14px; font-weight: 700; font-family: inherit;
+    cursor: pointer; transition: opacity 0.15s;
   }
-
-  .upload-zone h2 {
-    font-family: 'Gaegu', cursive;
-    font-size: 24px;
-    color: var(--green);
-    margin-bottom: 6px;
+  .btn-cam:hover { opacity: 0.85; }
+  .btn-album {
+    flex: 1; max-width: 150px;
+    padding: 12px 16px;
+    background: transparent; color: var(--g1);
+    border: 2px solid var(--g1); border-radius: 14px;
+    font-size: 14px; font-weight: 700; font-family: inherit;
+    cursor: pointer; transition: background 0.15s;
   }
-
-  .upload-zone p {
-    font-size: 14px;
-    color: var(--text-mid);
-    line-height: 1.6;
-  }
-
-  .upload-zone .hint {
+  .btn-album:hover { background: var(--g3); }
+  .hint-chip {
     display: inline-block;
-    margin-top: 10px;
-    font-size: 12px;
-    color: var(--text-light);
-    background: var(--green-light);
-    padding: 5px 12px;
-    border-radius: 20px;
+    font-size: 12px; color: var(--text3);
+    background: var(--g3);
+    padding: 5px 14px; border-radius: 100px;
   }
 
   input[type="file"] { display: none; }
-
-  /* 미리보기 */
-  .preview-area {
-    display: none;
-    margin-top: 16px;
-  }
-
+  .preview-area { display: none; }
   .preview-area.show { display: block; }
-
   .preview-img {
-    width: 100%;
-    max-height: 320px;
-    object-fit: contain;
-    border-radius: 16px;
-    border: 2px solid var(--border);
+    width: 100%; max-height: 300px; object-fit: contain;
+    border-radius: 16px; border: 1px solid var(--border);
     background: var(--bg);
   }
-
-  .preview-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 14px;
+  .preview-actions { display: flex; gap: 10px; margin-top: 12px; }
+  .btn-ghost {
+    flex: 1; padding: 10px;
+    background: var(--bg); color: var(--text2);
+    border: 1px solid var(--border2); border-radius: 12px;
+    font-size: 13px; font-family: inherit; font-weight: 500;
+    cursor: pointer; transition: all 0.15s;
   }
-
-  /* 선택 버튼들 */
-  .question-section {
-    background: white;
-    border-radius: 20px;
-    padding: 22px 20px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-    border: 1.5px solid var(--border);
+  .btn-ghost:hover { border-color: var(--g1); color: var(--g1); }
+  .btn-outline {
+    flex: 1; padding: 10px;
+    background: var(--g3); color: var(--g1);
+    border: 1px solid var(--g4); border-radius: 12px;
+    font-size: 13px; font-family: inherit; font-weight: 700;
+    cursor: pointer; transition: background 0.15s;
   }
+  .btn-outline:hover { background: var(--g4); }
 
-  .question-section h3 {
-    font-family: 'Gaegu', cursive;
-    font-size: 18px;
-    color: var(--text);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .question-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 14px;
-  }
-
+  .chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
   .chip {
-    padding: 8px 14px;
-    border-radius: 20px;
-    border: 2px solid var(--border);
+    padding: 8px 15px; border-radius: 100px;
+    border: 1.5px solid var(--border2);
     background: var(--bg);
-    font-size: 13px;
-    font-family: 'Noto Sans KR', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: var(--text-mid);
-    font-weight: 500;
+    font-size: 13px; font-family: inherit; font-weight: 500;
+    color: var(--text2); cursor: pointer; transition: all 0.15s;
   }
+  .chip:hover { border-color: var(--g1); color: var(--g1); }
+  .chip.selected { background: var(--g1); border-color: var(--g1); color: #fff; }
 
-  .chip:hover {
-    border-color: var(--green);
-    color: var(--green);
-    background: var(--green-light);
+  input[type="text"] {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--border2); border-radius: 12px;
+    font-size: 13px; font-family: inherit; color: var(--text);
+    background: var(--bg); outline: none; transition: border-color 0.15s;
   }
+  input[type="text"]:focus { border-color: var(--g1); background: var(--surface); }
 
-  .chip.selected {
-    background: var(--green);
-    border-color: var(--green);
-    color: white;
-  }
-
-  .custom-question {
-    display: flex;
-    gap: 8px;
-    margin-top: 4px;
-  }
-
-  .custom-question input {
-    flex: 1;
-    padding: 10px 14px;
-    font-size: 13px;
-  }
-
-  /* 분석 버튼 */
   .btn-analyze {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
-    color: white;
-    border: none;
-    border-radius: 18px;
-    font-size: 18px;
-    font-weight: 700;
-    font-family: 'Gaegu', cursive;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 20px rgba(45,138,78,0.35);
-    margin-bottom: 24px;
+    width: 100%; padding: 17px;
+    background: var(--g1); color: #fff;
+    border: none; border-radius: 18px;
+    font-family: 'Gaegu', cursive; font-size: 20px;
+    cursor: pointer; transition: opacity 0.15s;
+    margin-bottom: 24px; letter-spacing: 0.3px;
+    box-shadow: 0 4px 18px rgba(27,107,58,0.28);
   }
+  .btn-analyze:hover:not(:disabled) { opacity: 0.88; }
+  .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
 
-  .btn-analyze:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(45,138,78,0.45);
-  }
-
-  .btn-analyze:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  .btn-analyze .btn-icon {
-    font-size: 22px;
-    transition: transform 0.3s;
-  }
-
-  .btn-analyze:hover:not(:disabled) .btn-icon {
-    transform: rotate(20deg) scale(1.2);
-  }
-
-  /* 로딩 */
   .loading-area {
-    display: none;
-    text-align: center;
-    padding: 40px 20px;
-    background: white;
-    border-radius: 24px;
-    box-shadow: var(--shadow);
-    margin-bottom: 20px;
-    border: 1.5px solid var(--border);
+    display: none; text-align: center;
+    padding: 44px 20px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r3); margin-bottom: 16px;
+    box-shadow: var(--sh);
   }
-
   .loading-area.show { display: block; }
-
-  .microscope-anim {
-    font-size: 60px;
-    display: inline-block;
-    animation: wiggle 0.5s ease-in-out infinite alternate;
-    margin-bottom: 16px;
-  }
-
-  @keyframes wiggle {
-    0% { transform: rotate(-8deg) scale(1); }
-    100% { transform: rotate(8deg) scale(1.05); }
-  }
-
-  .loading-dots {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 14px;
-  }
-
+  .loading-emoji { font-size: 44px; display: block; margin-bottom: 14px; animation: bounce 1.2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .loading-text { font-family: 'Gaegu', cursive; font-size: 20px; color: var(--g1); margin-bottom: 4px; }
+  .loading-sub { font-size: 13px; color: var(--text3); }
+  .loading-dots { display: flex; justify-content: center; gap: 6px; margin-top: 16px; }
   .loading-dots span {
-    width: 10px; height: 10px;
-    background: var(--green);
-    border-radius: 50%;
-    animation: dot-bounce 1.2s ease-in-out infinite;
+    width: 8px; height: 8px; border-radius: 50%; background: var(--g1);
+    animation: dot 1.2s ease-in-out infinite;
   }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; background: var(--t1); }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; background: var(--y1); }
+  @keyframes dot { 0%,80%,100%{transform:scale(0.6);opacity:0.4} 40%{transform:scale(1.1);opacity:1} }
 
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; background: var(--teal); }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; background: var(--yellow); }
-
-  @keyframes dot-bounce {
-    0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-    40% { transform: scale(1.2); opacity: 1; }
-  }
-
-  .loading-text {
-    font-family: 'Gaegu', cursive;
-    font-size: 20px;
-    color: var(--green);
-  }
-
-  .loading-sub {
-    font-size: 13px;
-    color: var(--text-light);
-    margin-top: 4px;
-  }
-
-  /* 결과 영역 */
-  .result-area {
-    display: none;
-    animation: fadeUp 0.5s ease-out;
-  }
-
+  .result-area { display: none; animation: fadeUp 0.4s ease-out; }
   .result-area.show { display: block; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* 칭찬 카드 */
-  .praise-card {
-    background: linear-gradient(135deg, #fff9e6 0%, #fffef0 100%);
-    border: 2px solid var(--yellow);
-    border-radius: 20px;
+  .result-header-card {
+    background: var(--g1);
+    border-radius: var(--r3);
     padding: 22px;
-    margin-bottom: 16px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .praise-card::before {
-    content: '⭐';
-    position: absolute;
-    right: 16px; top: 16px;
-    font-size: 40px;
-    opacity: 0.2;
-  }
-
-  .card-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
     margin-bottom: 14px;
+    display: flex; align-items: center; gap: 14px;
   }
+  .result-header-icon { font-size: 40px; }
+  .result-header-text h3 { font-family: 'Gaegu', cursive; font-size: 22px; color: #fff; margin-bottom: 2px; }
+  .result-header-text p { font-size: 13px; color: rgba(255,255,255,0.75); }
 
-  .card-badge {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-  }
-
-  .badge-praise {
-    background: var(--yellow);
-    color: #7a5500;
-  }
-
-  .badge-improve {
-    background: #dbeafe;
-    color: #1e3a8a;
-  }
-
-  .badge-tip {
-    background: var(--teal-light);
-    color: #0f4f47;
-  }
-
-  .result-content {
-    font-size: 15px;
-    line-height: 1.8;
-    color: var(--text);
-  }
-
-  /* 보완 카드 */
-  .improve-card {
-    background: linear-gradient(135deg, #eff6ff 0%, #f8faff 100%);
-    border: 2px solid #93c5fd;
-    border-radius: 20px;
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r3);
     padding: 22px;
-    margin-bottom: 16px;
-    position: relative;
-    overflow: hidden;
+    margin-bottom: 14px;
+    box-shadow: var(--sh);
+    position: relative; overflow: hidden;
   }
-
-  .improve-card::before {
-    content: '🔍';
-    position: absolute;
-    right: 16px; top: 16px;
-    font-size: 40px;
-    opacity: 0.2;
+  .result-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--g1); border-radius: 0;
   }
-
-  /* 팁 카드 */
-  .tip-card {
-    background: var(--teal-light);
-    border: 2px solid var(--teal);
-    border-radius: 20px;
-    padding: 22px;
-    margin-bottom: 16px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .tip-card::before {
-    content: '💡';
-    position: absolute;
-    right: 16px; top: 16px;
-    font-size: 40px;
-    opacity: 0.2;
-  }
-
-  /* 점수 표시 */
-  .score-row {
-    display: flex;
-    gap: 12px;
+  .result-card-head {
+    display: flex; align-items: center; gap: 10px;
     margin-bottom: 16px;
   }
-
-  .score-item {
-    flex: 1;
-    background: white;
-    border-radius: 16px;
-    padding: 16px 12px;
-    text-align: center;
-    box-shadow: var(--shadow);
-    border: 1.5px solid var(--border);
+  .result-card-badge {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+    padding: 4px 10px; border-radius: 100px;
+    background: var(--g3); color: var(--g1);
+  }
+  .result-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px; line-height: 1.75; color: var(--text);
+  }
+  .result-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .result-num {
+    min-width: 28px; height: 28px;
+    background: var(--g3); color: var(--g1);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
   }
 
-  .score-emoji { font-size: 28px; display: block; margin-bottom: 6px; }
-  .score-label { font-size: 11px; color: var(--text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
-  .score-value {
-    font-family: 'Gaegu', cursive;
-    font-size: 22px;
-    color: var(--green);
-    display: block;
+  .result-content { font-size: 14px; line-height: 1.85; color: var(--text); }
+  .result-content p { margin-bottom: 8px; }
+  .result-content p:last-child { margin-bottom: 0; }
+  .result-content strong { font-weight: 700; color: var(--g1); }
+
+  .error-card {
+    background: #FFF5F5; border: 1px solid #FECACA;
+    border-radius: var(--r3); padding: 20px;
+    margin-bottom: 14px; font-size: 14px; color: #7F1D1D; line-height: 1.7;
+  }
+
+  .btn-retry {
+    width: 100%; padding: 14px;
+    background: var(--surface); color: var(--g1);
+    border: 2px solid var(--g1); border-radius: 16px;
+    font-size: 15px; font-weight: 700; font-family: 'Gaegu', cursive;
+    cursor: pointer; transition: background 0.15s;
     margin-top: 4px;
   }
+  .btn-retry:hover { background: var(--g3); }
 
-  /* 다시하기 버튼 */
-  .btn-retry {
-    width: 100%;
-    padding: 14px;
-    background: white;
-    color: var(--green);
-    border: 2px solid var(--green);
-    border-radius: 16px;
-    font-size: 15px;
-    font-weight: 700;
-    font-family: 'Gaegu', cursive;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .btn-retry:hover {
-    background: var(--green-light);
-    transform: translateY(-1px);
-  }
-
-  /* 에러 */
-  .error-card {
-    background: #fff5f5;
-    border: 2px solid #fca5a5;
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 16px;
-    font-size: 14px;
-    color: #7f1d1d;
-    line-height: 1.6;
-  }
-
-  /* 버튼 공통 */
-  .btn-secondary {
-    flex: 1;
-    padding: 10px;
-    background: var(--bg);
-    color: var(--text-mid);
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    font-size: 13px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-secondary:hover { border-color: var(--green); color: var(--green); }
-
-  .btn-primary-sm {
-    flex: 1;
-    padding: 10px;
-    background: var(--green);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 13px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-primary-sm:hover { background: #236e3e; }
-
-  /* 하단 안내 */
   .footer-note {
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-light);
-    margin-top: 24px;
-    line-height: 1.8;
+    text-align: center; font-size: 12px; color: var(--text3);
+    margin-top: 20px; line-height: 1.9;
+  }
+  .footer-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--g3); color: var(--g1);
+    font-size: 11px; font-weight: 700;
+    padding: 4px 12px; border-radius: 100px; margin-top: 8px;
   }
 
-  .observer-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--green-light);
-    color: var(--green);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 12px;
-    margin-top: 8px;
-  }
-
-  .upload-btn-row {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin: 16px 0 10px;
-    flex-wrap: wrap;
-  }
-
-  .upload-btn-cam, .upload-btn-album {
-    padding: 14px 24px;
-    border-radius: 16px;
-    border: none;
-    font-size: 15px;
-    font-weight: 700;
-    font-family: 'Noto Sans KR', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s;
-    min-width: 140px;
-  }
-
-  .upload-btn-cam {
-    background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
-    color: white;
-    box-shadow: 0 4px 12px rgba(45,138,78,0.3);
-  }
-
-  .upload-btn-cam:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(45,138,78,0.4);
-  }
-
-  .upload-btn-album {
-    background: white;
-    color: var(--green);
-    border: 2px solid var(--green);
-  }
-
-  .upload-btn-album:hover {
-    background: var(--green-light);
-    transform: translateY(-2px);
-  }
-
-  /* 반응형 */
-  @media (max-width: 480px) {
-    header h1 { font-size: 24px; }
-    .score-row { flex-wrap: wrap; }
-    .score-item { min-width: calc(50% - 6px); }
-    .container { padding: 16px 12px 60px; }
-  }
-
-  /* 타이핑 효과 */
-  .typing-cursor::after {
-    content: '|';
-    animation: blink 0.7s step-end infinite;
-    color: var(--green);
-  }
-
-  @keyframes blink {
-    50% { opacity: 0; }
-  }
-
-  /* 토스트 */
   .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--text);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 500;
-    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    z-index: 999;
-    white-space: nowrap;
-    box-shadow: var(--shadow-lg);
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: #111; color: #fff;
+    padding: 10px 22px; border-radius: 100px;
+    font-size: 13px; transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 999; white-space: nowrap;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 24px; }
+    .container { padding: 20px 12px 60px; }
+  }
+
+  /* ── 인트로 화면 ── */
+  #introScreen {
+    position: fixed; inset: 0;
+    background: #d4edda;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+    cursor: pointer;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  #introScreen.fade-out {
+    opacity: 0; transform: scale(1.03); pointer-events: none;
+  }
+
+  .intro-img-wrap {
+    position: relative;
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .intro-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .intro-start-overlay {
+    position: absolute;
+    bottom: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .intro-start-btn {
+    padding: 16px 44px;
+    background: #1B6B3A;
+    color: #fff;
+    border: none;
+    border-radius: 100px;
+    font-family: 'Gaegu', cursive;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(27,107,58,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+  }
+  .intro-start-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(27,107,58,0.4); }
+  .intro-start-btn:active { transform: scale(0.97); }
+
+  .intro-start-hint {
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    background: rgba(0,0,0,0.25);
+    padding: 5px 14px;
+    border-radius: 100px;
+    backdrop-filter: blur(4px);
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:0.6} 50%{opacity:1} }
 </style>
 </head>
 <body>
 
+<!-- 인트로 화면 -->
+<div id="introScreen" onclick="startApp()">
+  <div class="intro-img-wrap">
+    <img src="intro.png" alt="해캄과 짚신벌레 반가워" class="intro-img">
+    <div class="intro-start-overlay">
+      <button class="intro-start-btn" onclick="startApp()">
+        🚀 시작하기
+      </button>
+      <div class="intro-start-hint">화면을 탭해도 시작돼요!</div>
+    </div>
+  </div>
+</div>
+
+<!-- 메인 앱 (처음엔 숨김) -->
+<div id="mainApp" style="display:none;">
+
 <header>
-  <span class="header-emoji">🔬</span>
+  <div class="header-pill">🔬 과학 탐구 도우미</div>
   <h1>해캄과 짚신벌레, 반가워!</h1>
-  <p>활동지 사진을 올리면 AI가 관찰 기록을 함께 살펴봐 줄게요</p>
+  <p>활동지 사진을 올리면 AI가<br>더 관찰할 부분을 알려줄게요 🌿</p>
 </header>
 
 <div class="container">
 
   <!-- 업로드 -->
-  <div class="upload-card" id="uploadCard"
-       ondragover="handleDragOver(event)"
-       ondragleave="handleDragLeave(event)"
-       ondrop="handleDrop(event)">
+  <div class="section-card">
+    <div class="section-title"><div class="dot"></div>활동지 사진 올리기</div>
+    <div class="upload-zone" id="uploadCard"
+         ondragover="handleDragOver(event)"
+         ondragleave="handleDragLeave(event)"
+         ondrop="handleDrop(event)">
 
-    <div class="upload-zone" id="uploadZone">
-      <span class="upload-icon">📋</span>
-      <h2>활동지 사진을 올려줘!</h2>
-      <p>아래 버튼을 눌러서 사진을 올려주세요</p>
-
-      <div class="upload-btn-row">
-        <button class="upload-btn-cam" onclick="document.getElementById('cameraInput').click()">
-          📸 사진 찍기
-        </button>
-        <button class="upload-btn-album" onclick="document.getElementById('albumInput').click()">
-          🖼 앨범에서 선택
-        </button>
+      <div id="uploadZone">
+        <div class="upload-emoji-ring">📋</div>
+        <h2>사진을 올려줘!</h2>
+        <p>현미경으로 관찰한 결과를 적은<br>활동지 사진을 찍어서 올려주세요</p>
+        <div class="upload-btn-row">
+          <button class="btn-cam" onclick="document.getElementById('cameraInput').click()">📸 사진 찍기</button>
+          <button class="btn-album" onclick="document.getElementById('albumInput').click()">🖼 앨범 선택</button>
+        </div>
+        <div class="hint-chip">💻 PC에서는 파일을 여기로 끌어다 놓아도 돼요!</div>
       </div>
-      <span class="hint">💻 PC에서는 파일을 여기로 끌어다 놓아도 돼요!</span>
-    </div>
 
-    <!-- 카메라 입력 -->
-    <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handleFileSelect(event)" style="display:none">
-    <!-- 앨범 입력 -->
-    <input type="file" id="albumInput" accept="image/*" onchange="handleFileSelect(event)" style="display:none">
+      <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handleFileSelect(event)">
+      <input type="file" id="albumInput" accept="image/*" onchange="handleFileSelect(event)">
 
-    <div class="preview-area" id="previewArea">
-      <img id="previewImg" class="preview-img" src="" alt="활동지 미리보기">
-      <div class="preview-actions">
-        <button class="btn-secondary" onclick="clearImage()">🗑 다시 선택</button>
-        <button class="btn-primary-sm" onclick="document.getElementById('albumInput').click()">🖼 다른 사진</button>
+      <div class="preview-area" id="previewArea">
+        <img id="previewImg" class="preview-img" src="" alt="활동지 미리보기">
+        <div class="preview-actions">
+          <button class="btn-ghost" onclick="clearImage()">🗑 다시 선택</button>
+          <button class="btn-outline" onclick="document.getElementById('albumInput').click()">🖼 다른 사진</button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- 질문 선택 -->
-  <div class="question-section">
-    <h3>❓ 어떤 걸 물어볼까?</h3>
-    <div class="question-chips" id="questionChips">
+  <div class="section-card">
+    <div class="section-title"><div class="dot"></div>어떤 걸 물어볼까?</div>
+    <div class="chip-wrap" id="questionChips">
       <div class="chip selected" data-q="전체 피드백" onclick="toggleChip(this)">🔍 전체 피드백</div>
-      <div class="chip" data-q="빠진 관찰 요소" onclick="toggleChip(this)">📝 빠진 부분 찾기</div>
+      <div class="chip" data-q="빠진 관찰 요소" onclick="toggleChip(this)">📝 빠진 부분</div>
       <div class="chip" data-q="해캄 집중 분석" onclick="toggleChip(this)">🌿 해캄만</div>
       <div class="chip" data-q="짚신벌레 집중 분석" onclick="toggleChip(this)">🦠 짚신벌레만</div>
-      <div class="chip" data-q="관찰 용어 정확성" onclick="toggleChip(this)">📚 용어 맞나요?</div>
-      <div class="chip" data-q="더 관찰할 점" onclick="toggleChip(this)">🔭 더 볼 건 없나요?</div>
     </div>
-    <div class="custom-question">
-      <input type="text" id="customQ" placeholder="직접 질문하기 (예: 더 자세하게 관찰할 부분은 무엇일까?)">
-    </div>
+    <input type="text" id="customQ" placeholder="직접 질문하기 (예: 더 자세하게 관찰할 부분은 무엇일까?)">
   </div>
 
   <!-- 분석 버튼 -->
   <button class="btn-analyze" id="analyzeBtn" onclick="analyze()" disabled>
-    <span class="btn-icon">🤖</span>
-    AI 선생님께 물어보기!
+    🤖 AI 선생님께 물어보기!
   </button>
 
   <!-- 로딩 -->
   <div class="loading-area" id="loadingArea">
-    <div class="microscope-anim">🔬</div>
+    <span class="loading-emoji">🔬</span>
     <div class="loading-text">관찰 기록을 살펴보고 있어요...</div>
     <div class="loading-sub">잠깐만 기다려 줘요!</div>
-    <div class="loading-dots">
-      <span></span><span></span><span></span>
-    </div>
+    <div class="loading-dots"><span></span><span></span><span></span></div>
   </div>
 
   <!-- 결과 -->
@@ -834,9 +456,21 @@
 
 <div class="toast" id="toast"></div>
 
+</div><!-- end mainApp -->
+
 <script>
   let selectedFile = null;
   let apiKey = 'worker';
+
+  function startApp() {
+    const intro = document.getElementById('introScreen');
+    const main = document.getElementById('mainApp');
+    intro.classList.add('fade-out');
+    setTimeout(() => {
+      intro.style.display = 'none';
+      main.style.display = 'block';
+    }, 480);
+  }
 
   // 초기화
   window.onload = () => {
@@ -1016,55 +650,53 @@
   }
 
   function renderResult(text) {
-    // 섹션 파싱
     const sections = parseResponse(text);
-    
     let html = '';
 
-    // 점수/평가 이모지
-    html += `<div class="score-row">
-      <div class="score-item">
-        <span class="score-emoji">🔬</span>
-        <div class="score-label">관찰 분석</div>
-        <span class="score-value">완료!</span>
-      </div>
-      <div class="score-item">
-        <span class="score-emoji">🔍</span>
-        <div class="score-label">보완 제안</div>
-        <span class="score-value">준비됐어요!</span>
+    html += `<div class="result-header-card">
+      <div class="result-header-icon">🔬</div>
+      <div class="result-header-text">
+        <h3>AI 분석 완료!</h3>
+        <p>더 관찰해보면 좋을 부분이에요</p>
       </div>
     </div>`;
 
-    // 보완 카드
     if (sections.improve) {
-      html += `<div class="improve-card">
-        <div class="card-header">
-          <span style="font-size:20px">🔍</span>
-          <span class="card-badge badge-improve">더 관찰해 봐요</span>
-        </div>
-        <div class="result-content">${formatText(sections.improve)}</div>
-      </div>`;
-    }
+      const lines = sections.improve.split('\n').filter(l => l.trim());
+      const items = lines.map(l => l.replace(/^[-•✔*\d\.)]\s*/, '').trim()).filter(Boolean);
 
-    // 파싱 안 됐을 때 전체 출력
-    if (!sections.improve) {
-      html += `<div class="praise-card">
-        <div class="card-header">
-          <span style="font-size:20px">🤖</span>
-          <span class="card-badge badge-praise">AI 피드백</span>
+      html += `<div class="result-card">
+        <div class="result-card-head">
+          <span style="font-size:22px">🔍</span>
+          <span class="result-card-badge">더 관찰해 봐요</span>
+        </div>`;
+
+      if (items.length > 0) {
+        items.forEach((item, i) => {
+          html += `<div class="result-item">
+            <div class="result-num">${i+1}</div>
+            <div>${item}</div>
+          </div>`;
+        });
+      } else {
+        html += `<div class="result-content">${formatText(sections.improve)}</div>`;
+      }
+      html += `</div>`;
+    } else {
+      html += `<div class="result-card">
+        <div class="result-card-head">
+          <span style="font-size:22px">🤖</span>
+          <span class="result-card-badge">AI 피드백</span>
         </div>
         <div class="result-content">${formatText(text)}</div>
       </div>`;
     }
 
-    html += `<button class="btn-retry" onclick="retryFeedback()">
-      🔄 다른 사진으로 다시 해보기
-    </button>`;
-
+    html += `<button class="btn-retry" onclick="retryFeedback()">🔄 다른 사진으로 다시 해보기</button>`;
     html += `<div class="footer-note">
-      💚 열심히 관찰한 네가 자랑스러워요!<br>
-      관찰한 내용을 친구들과 함께 이야기해 보세요.
-      <br><span class="observer-badge">🔬 원생생물 탐구가 완료됐어요!</span>
+      열심히 관찰한 네가 자랑스러워요! 💚<br>
+      친구들과 함께 이야기해 보세요.
+      <br><span class="footer-badge">🔬 원생생물 탐구 완료!</span>
     </div>`;
 
     document.getElementById('resultArea').innerHTML = html;
@@ -1093,16 +725,11 @@
   function renderError(message) {
     const html = `
       <div class="error-card">
-        <strong>😅 앗, 문제가 생겼어요!</strong><br><br>
+        <strong>문제가 생겼어요</strong><br><br>
         ${message}<br><br>
-        <strong>확인해 주세요:</strong><br>
-        • API 키가 올바른지 확인해 주세요<br>
-        • 인터넷 연결을 확인해 주세요<br>
-        • 사진 파일이 너무 크지 않은지 확인해 주세요 (10MB 이하 권장)
+        API 키, 인터넷 연결, 사진 크기(10MB 이하)를 확인해 주세요.
       </div>
-      <button class="btn-retry" onclick="retryFeedback()">
-        🔄 다시 시도해 보기
-      </button>`;
+      <button class="btn-retry" onclick="retryFeedback()">다시 시도해 보기</button>`;
     document.getElementById('resultArea').innerHTML = html;
     document.getElementById('resultArea').classList.add('show');
   }
