@@ -929,11 +929,7 @@
 
 지금 학생이 "해캄과 짚신벌레" 관찰 활동지를 촬영한 사진을 보내왔어요.
 
-반드시 아래 형식을 정확히 지켜서 답변해 주세요. 각 섹션 제목을 그대로 써주세요.
-
-[칭찬]
-학생이 관찰 기록에서 잘 기록한 점을 구체적으로 2~3가지 칭찬해 주세요.
-이모지를 활용해서 따뜻하고 격려가 되게 써주세요.
+반드시 아래 형식을 정확히 지켜서 답변해 주세요.
 
 [보완]
 빠진 관찰 요소나 더 자세히 기록하면 좋을 부분을 2~3가지 알려주세요.
@@ -949,7 +945,7 @@
 - 초등학교 4학년 수준의 쉬운 말 사용
 - 이모지 풍부하게 활용
 - 한국어로 답변
-- [칭찬], [보완], [탐구제안] 태그는 반드시 포함${questionText}
+- [보완], [탐구제안] 태그는 반드시 포함${questionText}
 
 활동지 사진을 보고 실제로 학생이 적은 내용을 바탕으로 구체적으로 피드백해 주세요.`;
 
@@ -1017,14 +1013,14 @@
     // 점수/평가 이모지
     html += `<div class="score-row">
       <div class="score-item">
-        <span class="score-emoji">📊</span>
-        <div class="score-label">관찰 기록</div>
-        <span class="score-value">${sections.praise ? '잘했어요!' : '계속 도전!'}</span>
+        <span class="score-emoji">🔍</span>
+        <div class="score-label">관찰 분석</div>
+        <span class="score-value">완료!</span>
       </div>
       <div class="score-item">
-        <span class="score-emoji">🌟</span>
-        <div class="score-label">탐구 자세</div>
-        <span class="score-value">훌륭해요!</span>
+        <span class="score-emoji">💡</span>
+        <div class="score-label">탐구 제안</div>
+        <span class="score-value">준비됐어요!</span>
       </div>
       <div class="score-item">
         <span class="score-emoji">🔬</span>
@@ -1032,17 +1028,6 @@
         <span class="score-value">완료!</span>
       </div>
     </div>`;
-
-    // 칭찬 카드
-    if (sections.praise) {
-      html += `<div class="praise-card">
-        <div class="card-header">
-          <span style="font-size:20px">⭐</span>
-          <span class="card-badge badge-praise">잘한 점</span>
-        </div>
-        <div class="result-content">${formatText(sections.praise)}</div>
-      </div>`;
-    }
 
     // 보완 카드
     if (sections.improve) {
@@ -1095,11 +1080,9 @@
   function parseResponse(text) {
     const sections = { praise: '', improve: '', tip: '' };
 
-    const praiseMatch = text.match(/\[칭찬\]([\s\S]*?)(?=\[보완\]|\[탐구제안\]|$)/);
-    const improveMatch = text.match(/\[보완\]([\s\S]*?)(?=\[칭찬\]|\[탐구제안\]|$)/);
-    const tipMatch = text.match(/\[탐구제안\]([\s\S]*?)(?=\[칭찬\]|\[보완\]|$)/);
+    const improveMatch = text.match(/\[보완\]([\s\S]*?)(?=\[탐구제안\]|$)/);
+    const tipMatch = text.match(/\[탐구제안\]([\s\S]*?)$/);
 
-    if (praiseMatch) sections.praise = praiseMatch[1].trim();
     if (improveMatch) sections.improve = improveMatch[1].trim();
     if (tipMatch) sections.tip = tipMatch[1].trim();
 
