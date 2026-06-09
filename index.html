@@ -522,7 +522,10 @@
 
   function clearImage() {
     selectedFile = null;
-    document.getElementById('fileInput').value = '';
+    const cam = document.getElementById('cameraInput');
+    const album = document.getElementById('albumInput');
+    if (cam) cam.value = '';
+    if (album) album.value = '';
     document.getElementById('previewArea').classList.remove('show');
     document.getElementById('uploadZone').style.display = 'block';
     updateAnalyzeBtn();
