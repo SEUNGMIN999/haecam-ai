@@ -668,6 +668,48 @@
     margin-top: 8px;
   }
 
+  .upload-btn-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 16px 0 10px;
+    flex-wrap: wrap;
+  }
+
+  .upload-btn-cam, .upload-btn-album {
+    padding: 14px 24px;
+    border-radius: 16px;
+    border: none;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 140px;
+  }
+
+  .upload-btn-cam {
+    background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(45,138,78,0.3);
+  }
+
+  .upload-btn-cam:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(45,138,78,0.4);
+  }
+
+  .upload-btn-album {
+    background: white;
+    color: var(--green);
+    border: 2px solid var(--green);
+  }
+
+  .upload-btn-album:hover {
+    background: var(--green-light);
+    transform: translateY(-2px);
+  }
+
   /* 반응형 */
   @media (max-width: 480px) {
     header h1 { font-size: 24px; }
@@ -722,19 +764,33 @@
        ondragover="handleDragOver(event)"
        ondragleave="handleDragLeave(event)"
        ondrop="handleDrop(event)">
-    <label for="fileInput" class="upload-zone" id="uploadZone">
+
+    <div class="upload-zone" id="uploadZone">
       <span class="upload-icon">📋</span>
       <h2>활동지 사진을 올려줘!</h2>
-      <p>현미경으로 관찰한 결과를 적은<br>활동지 사진을 찍어서 올려주세요</p>
-      <span class="hint">📸 사진 찍기 · 파일 선택 · 드래그앤드롭 모두 OK!</span>
-    </label>
-    <input type="file" id="fileInput" accept="image/*" capture="environment" onchange="handleFileSelect(event)">
+      <p>아래 버튼을 눌러서 사진을 올려주세요</p>
+
+      <div class="upload-btn-row">
+        <button class="upload-btn-cam" onclick="document.getElementById('cameraInput').click()">
+          📸 사진 찍기
+        </button>
+        <button class="upload-btn-album" onclick="document.getElementById('albumInput').click()">
+          🖼 앨범에서 선택
+        </button>
+      </div>
+      <span class="hint">💻 PC에서는 파일을 여기로 끌어다 놓아도 돼요!</span>
+    </div>
+
+    <!-- 카메라 입력 -->
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handleFileSelect(event)" style="display:none">
+    <!-- 앨범 입력 -->
+    <input type="file" id="albumInput" accept="image/*" onchange="handleFileSelect(event)" style="display:none">
 
     <div class="preview-area" id="previewArea">
       <img id="previewImg" class="preview-img" src="" alt="활동지 미리보기">
       <div class="preview-actions">
         <button class="btn-secondary" onclick="clearImage()">🗑 다시 선택</button>
-        <button class="btn-primary-sm" onclick="document.getElementById('fileInput').click()">📸 다른 사진</button>
+        <button class="btn-primary-sm" onclick="document.getElementById('albumInput').click()">🖼 다른 사진</button>
       </div>
     </div>
   </div>
