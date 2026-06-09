@@ -743,7 +743,12 @@
     clearImage();
     document.getElementById('resultArea').className = 'result-area';
     document.getElementById('resultArea').innerHTML = '';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('loadingArea').classList.remove('show');
+    document.getElementById('analyzeBtn').style.display = 'flex';
+    updateAnalyzeBtn();
+    document.getElementById('mainApp').scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   }
 
   function fileToBase64(file) {
