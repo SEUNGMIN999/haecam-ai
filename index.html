@@ -959,18 +959,13 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-<<<<<<< Updated upstream
             model: 'claude-sonnet-4-5',
-=======
-            model: 'gpt-4o',
->>>>>>> Stashed changes
             max_tokens: 2000,
             messages: [
               {
                 role: 'user',
                 content: [
                   {
-<<<<<<< Updated upstream
                     type: 'image',
                     source: {
                       type: 'base64',
@@ -982,12 +977,6 @@
                     type: 'text',
                     text: prompt
                   }
-=======
-                    type: 'image_url',
-                    image_url: { url: `data:${mimeType};base64,${base64}` }
-                  },
-                  { type: 'text', text: prompt }
->>>>>>> Stashed changes
                 ]
               }
             ]
@@ -1002,11 +991,7 @@
 
       const data = await response.json();
       console.log('Worker 응답:', JSON.stringify(data).slice(0, 200));
-<<<<<<< Updated upstream
       const text = data?.content?.[0]?.text || '';
-=======
-      const text = data?.choices?.[0]?.message?.content || '';
->>>>>>> Stashed changes
 
       if (!text) {
         const errMsg = data?.error?.message || data?.candidates?.[0]?.finishReason || '응답을 받지 못했어요.';
