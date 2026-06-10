@@ -633,11 +633,7 @@
   }
 
   function getSelectedQuestions() {
-    const chips = document.querySelectorAll('.chip.selected');
-    const qs = Array.from(chips).map(c => c.dataset.q);
-    const custom = document.getElementById('customQ').value.trim();
-    if (custom) qs.push(custom);
-    return qs;
+    return [];
   }
 
   async function analyze() {
