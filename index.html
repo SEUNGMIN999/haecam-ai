@@ -569,7 +569,7 @@
     try {
       // 이미지 → base64
       const base64 = await fileToBase64(selectedFile);
-      const mimeType = selectedFile.type || 'image/jpeg';
+      const mimeType = 'image/jpeg';
 
       const prompt = `당신은 초등학교 4학년 과학 수업에서 학생들의 관찰 활동을 도와주는 친절한 AI 선생님이에요.
 
