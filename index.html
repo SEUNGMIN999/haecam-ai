@@ -472,6 +472,27 @@
   let selectedFile = null;
   let apiKey = 'worker';
 
+  // 모바일 감지해서 버튼 크기 조절
+  function adjustIntroForMobile() {
+    const isMobile = window.innerWidth < window.innerHeight; // 세로 모드
+    const btn = document.querySelector('.intro-start-btn');
+    const hint = document.querySelector('.intro-start-hint');
+    const overlay = document.querySelector('.intro-start-overlay');
+    if (isMobile) {
+      btn.style.fontSize = '18px';
+      btn.style.padding = '12px 32px';
+      hint.style.fontSize = '12px';
+      overlay.style.top = '62%';
+    } else {
+      btn.style.fontSize = '';
+      btn.style.padding = '';
+      hint.style.fontSize = '';
+      overlay.style.top = '';
+    }
+  }
+  window.addEventListener('load', adjustIntroForMobile);
+  window.addEventListener('resize', adjustIntroForMobile);
+
   function startApp() {
     const intro = document.getElementById('introScreen');
     const main = document.getElementById('mainApp');
