@@ -636,7 +636,8 @@
   }
 
   function toggleChip(el) {
-    el.classList.toggle('selected');
+    document.querySelectorAll('#questionChips .chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
   }
 
   function updateAnalyzeBtn() {
