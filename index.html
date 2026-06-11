@@ -514,13 +514,6 @@
 
   <!-- 질문 선택 -->
   <div class="section-card">
-    <div class="section-title"><div class="dot"></div>어떤 걸 물어볼까?</div>
-    <div class="chip-wrap" id="questionChips">
-      <div class="chip selected" data-q="전체 피드백" onclick="toggleChip(this)">🔍 전체 피드백</div>
-      <div class="chip" data-q="빠진 관찰 요소" onclick="toggleChip(this)">📝 빠진 부분</div>
-      <div class="chip" data-q="해캄 집중 분석" onclick="toggleChip(this)">🌿 해캄만</div>
-      <div class="chip" data-q="짚신벌레 집중 분석" onclick="toggleChip(this)">🦠 짚신벌레만</div>
-    </div>
     <input type="text" id="customQ" placeholder="직접 질문하기 (예: 더 자세하게 관찰할 부분은 무엇일까?)">
   </div>
 
@@ -646,11 +639,8 @@
   }
 
   function getSelectedQuestions() {
-    const chips = document.querySelectorAll('#questionChips .chip.selected');
-    const qs = Array.from(chips).map(c => c.dataset.q);
     const custom = document.getElementById('customQ').value.trim();
-    if (custom) qs.push(custom);
-    return qs;
+    return custom ? [custom] : ['전체 피드백'];
   }
 
   async function analyze() {
