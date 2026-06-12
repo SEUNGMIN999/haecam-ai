@@ -850,7 +850,7 @@ ${focusPrompt}
 
     if (sections.improve) {
       const lines = sections.improve.split('\n').filter(l => l.trim());
-      const items = lines.map(l => l.replace(/^[-•✔*\d\.)]\s*/, '').trim()).filter(Boolean);
+      const items = lines.map(l => l.replace(/^[-•✔*\d\.)]\s*/, '').trim()).filter(Boolean).filter(item => item !== '*' && item.length > 1);
 
       html += `<div class="result-card">
         <div class="result-card-head">
@@ -965,10 +965,16 @@ ${focusPrompt}
             role: 'user',
             content: `당신은 초등학교 4학년 과학 수업의 친절한 AI 선생님이에요.
 해캄과 짚신벌레에 대한 학생의 질문에 답해주세요.
+
+반드시 지켜야 할 규칙:
 - 초등학교 4학년이 이해할 수 있는 쉬운 말로 답해주세요.
 - 3~4문장으로 짧고 명확하게 답해주세요.
 - 이모지를 적절히 사용해 주세요.
 - 한국어로 답변해 주세요.
+- 짚신벌레나 해캄의 움직임에 대한 내용은 절대 언급하지 마세요. (영구표본으로 관찰하므로 움직이지 않아요)
+- "엽록체", "핵", "세포", "나선", "수축포", "대핵", "소핵" 같은 어려운 과학 용어는 절대 사용하지 마세요.
+- 해캄이나 짚신벌레의 생김새나 특징을 설명할 때는 동물이나 식물에 비해 구조가 단순하다는 점을 자연스럽게 포함해 주세요.
+- 마크다운 # 기호는 절대 사용하지 마세요.
 
 학생 질문: ${question}`
           }]
