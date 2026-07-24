@@ -467,6 +467,19 @@
 .rtc-launcher:hover{ padding-right:18px; background:var(--g2); }
 .rtc-launcher .rtc-launcher-emoji{ writing-mode:horizontal-tb; font-size:20px; }
 
+/* 왼쪽 런처 (실시간 AI 선생님) */
+.rtc-launcher.left{ right:auto; left:0; border-radius:0 16px 16px 0; background:var(--t1); box-shadow:4px 4px 18px rgba(13,148,136,0.32); }
+.rtc-launcher.left:hover{ padding-right:12px; padding-left:18px; background:#0b7d73; }
+
+/* 왼쪽 드로어 */
+.rtc-drawer.left{ right:auto; left:0; transform:translateX(-100%); box-shadow:8px 0 30px rgba(13,31,23,0.22); }
+.rtc-drawer.left.open{ transform:translateX(0); }
+.rtc-head.teal{ background:var(--t1); }
+
+/* 활동지 분석 도우미 모드 제목 */
+.mode-title{ display:flex; align-items:center; gap:8px; font-family:'Gaegu',cursive; font-size:21px; color:var(--g1); margin:2px 4px 12px; letter-spacing:-0.2px; }
+.mode-title .mt-line{ flex:1; height:2px; background:var(--g4); border-radius:2px; }
+
 .rtc-overlay{
   position:fixed; inset:0; background:rgba(13,31,23,0.42);
   z-index:90; opacity:0; pointer-events:none; transition:opacity 0.3s ease;
@@ -612,6 +625,9 @@ body.rtc-lock{ overflow:hidden; }
 
 <div class="container">
 
+  <!-- 활동지 분석 도우미 -->
+  <div class="mode-title">📋 활동지 분석 도우미 <span class="mt-line"></span></div>
+
   <!-- 업로드 -->
   <div class="section-card">
     <div class="section-title"><div class="dot"></div>활동지 사진 올리기</div>
@@ -646,11 +662,6 @@ body.rtc-lock{ overflow:hidden; }
 
 
 
-  <!-- 질문 선택 -->
-  <div class="section-card">
-    <input type="text" id="customQ" placeholder="직접 질문하기 (예: 더 자세하게 관찰할 부분은 무엇일까?)">
-  </div>
-
   <!-- 분석 버튼 -->
   <button class="btn-analyze" id="analyzeBtn" onclick="analyze()" disabled>
     🤖 AI 선생님께 물어보기!
@@ -671,9 +682,45 @@ body.rtc-lock{ overflow:hidden; }
 
 <div class="toast" id="toast"></div>
 
+<!-- ===== 실시간 AI 선생님 런처 (왼쪽) ===== -->
+<button class="rtc-launcher left" onclick="openAskDrawer()" aria-label="실시간 AI 선생님과 대화하기">
+  <span class="rtc-launcher-emoji">🙋</span>실시간 AI 선생님과 대화하기
+</button>
+
+<!-- ===== 실시간 AI 선생님 드로어 (왼쪽) ===== -->
+<div class="rtc-overlay" id="askOverlay" onclick="closeAskDrawer()"></div>
+<div class="rtc-drawer left" id="askDrawer" role="dialog" aria-label="실시간 AI 선생님">
+  <div class="rtc-head teal">
+    <span class="rtc-head-ic">🙋</span>
+    <div>
+      <h3>실시간 AI 선생님</h3>
+      <p>해캄·짚신벌레가 궁금하면 물어봐요</p>
+    </div>
+    <button class="rtc-close" onclick="closeAskDrawer()" aria-label="닫기">✕</button>
+  </div>
+  <div class="rtc-body">
+    <div class="followup-section" style="margin-top:0;">
+      <div class="followup-title">🔍 더 궁금한 게 있어요!</div>
+      <div class="followup-subtitle">해캄과 짚신벌레의 특징이나 사는 곳을 AI 선생님께 물어보세요</div>
+      <div class="followup-chips">
+        <div class="followup-chip" onclick="askFollowUp('해캄은 어디에 살아요?')">🌿 해캄은 어디 살아?</div>
+        <div class="followup-chip" onclick="askFollowUp('짚신벌레는 어디에 살아요?')">🦠 짚신벌레는 어디 살아?</div>
+        <div class="followup-chip" onclick="askFollowUp('해캄의 특징을 알려주세요')">✨ 해캄의 특징은?</div>
+        <div class="followup-chip" onclick="askFollowUp('짚신벌레의 특징을 알려주세요')">✨ 짚신벌레의 특징은?</div>
+      </div>
+      <div class="followup-input-wrap">
+        <input type="text" id="followupQ" placeholder="직접 질문을 입력해 보세요!" onkeydown="if(event.key==='Enter') askFollowUpCustom()">
+        <button class="followup-send-btn" onclick="askFollowUpCustom()">➤</button>
+      </div>
+      <div id="followupLoading" style="display:none; text-align:center; padding:12px; color:#555;">🤖 답변 중...</div>
+      <div id="followupResult"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ===== 실시간 관찰 챗봇 런처 ===== -->
-<button class="rtc-launcher" onclick="RTC.open()" aria-label="실시간 챗봇과 대화하기">
-  <span class="rtc-launcher-emoji">💬</span>실시간 챗봇과 대화하기
+<button class="rtc-launcher" onclick="RTC.open()" aria-label="실시간 관찰 도우미">
+  <span class="rtc-launcher-emoji">🔬</span>실시간 관찰 도우미
 </button>
 
 <!-- ===== 실시간 관찰 챗봇 드로어 ===== -->
@@ -870,7 +917,8 @@ body.rtc-lock{ overflow:hidden; }
   }
 
   function getSelectedQuestions() {
-    const custom = document.getElementById('customQ').value.trim();
+    const el = document.getElementById('customQ');
+    const custom = el ? el.value.trim() : '';
     return custom ? [custom] : ['전체 피드백'];
   }
 
@@ -879,7 +927,8 @@ body.rtc-lock{ overflow:hidden; }
 
     const questions = getSelectedQuestions();
     const selectedChip = questions[0] || '전체 피드백';
-    const customQ = document.getElementById('customQ').value.trim();
+    const _cq = document.getElementById('customQ');
+    const customQ = _cq ? _cq.value.trim() : '';
 
     // 칩별 프롬프트 구성
     let focusPrompt = '';
@@ -1116,23 +1165,6 @@ ${focusPrompt}
     }
 
     html += `<button class="btn-retry" onclick="retryFeedback()">🔄 다른 사진으로 다시 해보기</button>`;
-    html += `
-    <div class="followup-section">
-      <div class="followup-title">🔍 더 궁금한 게 있어요!</div>
-      <div class="followup-subtitle">해캄과 짚신벌레의 특징이나 사는 곳을 AI 선생님께 물어보세요</div>
-      <div class="followup-chips">
-        <div class="followup-chip" onclick="askFollowUp('해캄은 어디에 살아요?')">🌿 해캄은 어디 살아?</div>
-        <div class="followup-chip" onclick="askFollowUp('짚신벌레는 어디에 살아요?')">🦠 짚신벌레는 어디 살아?</div>
-        <div class="followup-chip" onclick="askFollowUp('해캄의 특징을 알려주세요')">✨ 해캄의 특징은?</div>
-        <div class="followup-chip" onclick="askFollowUp('짚신벌레의 특징을 알려주세요')">✨ 짚신벌레의 특징은?</div>
-      </div>
-      <div class="followup-input-wrap">
-        <input type="text" id="followupQ" placeholder="직접 질문을 입력해 보세요!" onkeydown="if(event.key==='Enter') askFollowUpCustom()">
-        <button class="followup-send-btn" onclick="askFollowUpCustom()">➤</button>
-      </div>
-      <div id="followupLoading" style="display:none; text-align:center; padding:12px; color:#555;">🤖 답변 중...</div>
-      <div id="followupResult"></div>
-    </div>`;
     html += `<div class="footer-note">
       열심히 관찰한 네가 자랑스러워요! 💚<br>
       친구들과 함께 이야기해 보세요.
@@ -1181,6 +1213,20 @@ ${focusPrompt}
     askFollowUp(q);
     document.getElementById('followupQ').value = '';
   }
+
+  // 왼쪽 드로어 (실시간 AI 선생님)
+  function openAskDrawer() {
+    document.getElementById('askOverlay').classList.add('open');
+    document.getElementById('askDrawer').classList.add('open');
+    document.body.classList.add('rtc-lock');
+    setTimeout(() => { const el = document.getElementById('followupQ'); if (el) el.focus(); }, 350);
+  }
+  function closeAskDrawer() {
+    document.getElementById('askOverlay').classList.remove('open');
+    document.getElementById('askDrawer').classList.remove('open');
+    document.body.classList.remove('rtc-lock');
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAskDrawer(); });
 
   async function askFollowUp(question) {
     const loading = document.getElementById('followupLoading');
