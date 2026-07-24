@@ -592,9 +592,29 @@
 body.rtc-lock{ overflow:hidden; }
 
 @media (max-width:768px),(orientation:portrait) and (max-width:1440px){
-  .rtc-launcher{ font-size:14px; padding:13px 9px; }
-  .rtc-launcher .rtc-launcher-emoji{ font-size:17px; }
-  .rtc-drawer{ width:100%; max-width:100vw; }
+  /* 모바일에서는 세로 탭 대신 화면 하단 바로 배치 (본문과 겹치지 않게) */
+  .rtc-launcher{
+    top:auto; bottom:0; right:0; left:auto; transform:none;
+    width:50%; max-width:none;
+    writing-mode:horizontal-tb; text-orientation:mixed;
+    border-radius:16px 0 0 0;
+    padding:11px 8px calc(11px + env(safe-area-inset-bottom));
+    font-size:13px; letter-spacing:0; line-height:1.25;
+    justify-content:center; text-align:center; gap:3px;
+    flex-direction:column;
+    box-shadow:0 -4px 16px rgba(0,0,0,0.16);
+  }
+  .rtc-launcher:hover{ padding-right:8px; }
+  .rtc-launcher .rtc-launcher-emoji{ writing-mode:horizontal-tb; font-size:17px; }
+  .rtc-launcher.left{
+    left:0; right:auto; border-radius:0 16px 0 0;
+    padding:11px 8px calc(11px + env(safe-area-inset-bottom));
+    box-shadow:0 -4px 16px rgba(0,0,0,0.16);
+  }
+  .rtc-launcher.left:hover{ padding-left:8px; padding-right:8px; }
+  .rtc-drawer, .rtc-drawer.left{ width:100%; max-width:100vw; }
+  /* 하단 바에 가려지지 않도록 본문 여백 확보 */
+  .container{ padding-bottom:96px !important; }
 }
 </style>
 </head>
