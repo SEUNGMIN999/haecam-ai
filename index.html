@@ -451,7 +451,141 @@
   }
   @keyframes blink { 0%,100%{opacity:0.6} 50%{opacity:1} }
 </style>
+<style>
+/* ===== 실시간 관찰 챗봇 (드로어) ===== */
+.rtc-launcher{
+  position:fixed; right:0; top:50%; transform:translateY(-50%);
+  z-index:80; background:var(--g1); color:#fff;
+  border:none; border-radius:16px 0 0 16px;
+  padding:16px 12px; cursor:pointer;
+  writing-mode:vertical-rl; text-orientation:mixed;
+  font-family:'Gaegu',cursive; font-size:17px; letter-spacing:1px;
+  box-shadow:-4px 4px 18px rgba(27,107,58,0.32);
+  transition:padding 0.15s, background 0.15s;
+  display:flex; align-items:center; gap:8px;
+}
+.rtc-launcher:hover{ padding-right:18px; background:var(--g2); }
+.rtc-launcher .rtc-launcher-emoji{ writing-mode:horizontal-tb; font-size:20px; }
+
+.rtc-overlay{
+  position:fixed; inset:0; background:rgba(13,31,23,0.42);
+  z-index:90; opacity:0; pointer-events:none; transition:opacity 0.3s ease;
+}
+.rtc-overlay.open{ opacity:1; pointer-events:auto; }
+
+.rtc-drawer{
+  position:fixed; top:0; right:0; height:100%; width:420px; max-width:92vw;
+  background:var(--bg); z-index:95;
+  transform:translateX(100%); transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  display:flex; flex-direction:column;
+  box-shadow:-8px 0 30px rgba(13,31,23,0.22);
+}
+.rtc-drawer.open{ transform:translateX(0); }
+
+.rtc-head{
+  background:var(--g1); color:#fff; padding:18px 18px 16px;
+  display:flex; align-items:center; gap:12px; flex-shrink:0;
+}
+.rtc-head .rtc-head-ic{ font-size:26px; }
+.rtc-head h3{ font-family:'Gaegu',cursive; font-size:20px; }
+.rtc-head p{ font-size:12px; color:rgba(255,255,255,0.78); margin-top:2px; }
+.rtc-close{
+  margin-left:auto; background:rgba(255,255,255,0.18); color:#fff;
+  border:none; width:34px; height:34px; border-radius:50%;
+  font-size:18px; cursor:pointer; transition:background 0.15s; flex-shrink:0;
+}
+.rtc-close:hover{ background:rgba(255,255,255,0.32); }
+
+.rtc-body{ flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; }
+
+/* 설정 */
+.rtc-setup-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--r2); padding:16px; margin-bottom:14px; box-shadow:var(--sh); }
+.rtc-setup-title{ font-size:12.5px; font-weight:700; color:var(--text2); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.rtc-setup-title .dot{ width:7px; height:7px; border-radius:50%; background:var(--g1); }
+.rtc-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+.rtc-chip{ padding:9px 15px; border-radius:100px; border:1.5px solid var(--border2); background:var(--bg); font-size:13.5px; font-family:inherit; font-weight:600; color:var(--text2); cursor:pointer; transition:all 0.15s; }
+.rtc-chip:hover{ border-color:var(--g1); color:var(--g1); }
+.rtc-chip.selected{ background:var(--g1); border-color:var(--g1); color:#fff; }
+.rtc-upload{ border:2px dashed var(--border2); border-radius:16px; padding:16px; text-align:center; transition:all 0.2s; margin-top:6px; }
+.rtc-upload.dragover{ border-color:var(--g1); background:var(--g3); }
+.rtc-upload p{ font-size:12px; color:var(--text2); line-height:1.6; margin-bottom:10px; }
+.rtc-upbtn-row{ display:flex; gap:8px; justify-content:center; }
+.rtc-btn-cam{ padding:9px 14px; background:var(--g1); color:#fff; border:none; border-radius:12px; font-size:12.5px; font-weight:700; font-family:inherit; cursor:pointer; }
+.rtc-btn-cam:hover{ opacity:0.85; }
+.rtc-btn-album{ padding:9px 14px; background:transparent; color:var(--g1); border:2px solid var(--g1); border-radius:12px; font-size:12.5px; font-weight:700; font-family:inherit; cursor:pointer; }
+.rtc-btn-album:hover{ background:var(--g3); }
+.rtc-preview{ display:none; margin-top:6px; }
+.rtc-preview.show{ display:block; }
+.rtc-preview img{ width:100%; max-height:180px; object-fit:contain; border-radius:12px; border:1px solid var(--border); background:var(--bg); }
+.rtc-preview button{ margin-top:8px; width:100%; padding:8px; background:var(--bg); color:var(--text2); border:1px solid var(--border2); border-radius:10px; font-size:12px; font-family:inherit; cursor:pointer; }
+.rtc-preview button:hover{ border-color:var(--g1); color:var(--g1); }
+.rtc-opt-note{ font-size:11.5px; color:var(--text3); text-align:center; margin-top:8px; line-height:1.5; }
+.rtc-start{ width:100%; padding:14px; background:var(--g1); color:#fff; border:none; border-radius:16px; font-family:'Gaegu',cursive; font-size:19px; cursor:pointer; box-shadow:0 4px 16px rgba(27,107,58,0.28); }
+.rtc-start:hover{ opacity:0.9; }
+
+/* 진행표 */
+.rtc-checklist{ background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:13px 15px; margin-bottom:12px; box-shadow:var(--sh); }
+.rtc-cl-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; }
+.rtc-cl-head .t{ font-size:12px; font-weight:700; color:var(--text2); }
+.rtc-cl-head .c{ font-size:11.5px; font-weight:700; color:var(--g1); background:var(--g3); padding:3px 9px; border-radius:100px; }
+.rtc-cl-bar{ height:7px; background:var(--g3); border-radius:100px; overflow:hidden; margin-bottom:10px; }
+.rtc-cl-fill{ height:100%; background:var(--g1); width:0%; border-radius:100px; transition:width 0.4s ease; }
+.rtc-cl-items{ display:flex; flex-wrap:wrap; gap:6px; }
+.rtc-cl-item{ display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:500; color:var(--text2); background:var(--bg); border:1.5px solid var(--border2); padding:4px 10px; border-radius:100px; transition:all 0.25s; }
+.rtc-cl-item.done{ background:var(--g1); border-color:var(--g1); color:#fff; }
+
+/* 채팅 */
+.rtc-chat-card{ flex:1; display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:12px; box-shadow:var(--sh); min-height:220px; }
+.rtc-chatlog{ flex:1; display:flex; flex-direction:column; gap:10px; overflow-y:auto; padding:4px; }
+.rtc-msg{ display:flex; gap:8px; align-items:flex-start; max-width:90%; }
+.rtc-msg.ai{ align-self:flex-start; }
+.rtc-msg.me{ align-self:flex-end; flex-direction:row-reverse; }
+.rtc-avatar{ width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; background:var(--g3); border:2px solid var(--g4); }
+.rtc-msg.me .rtc-avatar{ background:var(--t2); border-color:#9fded9; }
+.rtc-bubble{ padding:10px 13px; border-radius:15px; font-size:13.5px; line-height:1.65; }
+.rtc-msg.ai .rtc-bubble{ background:var(--g3); color:var(--text); border-top-left-radius:4px; }
+.rtc-msg.me .rtc-bubble{ background:var(--g1); color:#fff; border-top-right-radius:4px; }
+.rtc-bubble .thumb{ display:block; max-width:130px; border-radius:9px; margin-top:5px; }
+.rtc-typing{ display:inline-flex; gap:5px; padding:3px 2px; }
+.rtc-typing span{ width:6px; height:6px; border-radius:50%; background:var(--g2); animation:rtcdot 1.2s ease-in-out infinite; }
+.rtc-typing span:nth-child(2){ animation-delay:0.2s; }
+.rtc-typing span:nth-child(3){ animation-delay:0.4s; }
+@keyframes rtcdot{ 0%,80%,100%{transform:scale(0.6);opacity:0.4} 40%{transform:scale(1.1);opacity:1} }
+.rtc-inputrow{ display:flex; gap:7px; margin-top:10px; }
+.rtc-inputrow input{ flex:1; border:1.5px solid var(--border2); border-radius:13px; padding:11px 13px; font-size:13.5px; font-family:inherit; color:var(--text); background:var(--bg); outline:none; }
+.rtc-inputrow input:focus{ border-color:var(--g1); background:var(--surface); }
+.rtc-inputrow input:disabled{ opacity:0.5; }
+.rtc-send{ background:var(--g1); color:#fff; border:none; border-radius:13px; padding:0 16px; font-size:17px; cursor:pointer; }
+.rtc-send:hover:not(:disabled){ opacity:0.85; }
+.rtc-send:disabled{ opacity:0.4; cursor:not-allowed; }
+.rtc-quick{ display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
+.rtc-quick-chip{ background:var(--bg); border:1.5px solid var(--border2); border-radius:100px; padding:5px 11px; font-size:11.5px; font-family:inherit; color:var(--text2); cursor:pointer; transition:all 0.15s; }
+.rtc-quick-chip:hover{ border-color:var(--g1); color:var(--g1); }
+.rtc-toolrow{ display:flex; gap:8px; margin-top:12px; }
+.rtc-tool{ flex:1; padding:11px; border-radius:13px; font-size:12.5px; font-family:inherit; font-weight:700; cursor:pointer; }
+.rtc-tool.fill{ background:var(--g3); color:var(--g1); border:1px solid var(--g4); }
+.rtc-tool.fill:hover{ background:var(--g4); }
+.rtc-tool.line{ background:var(--surface); color:var(--text2); border:1.5px solid var(--border2); }
+.rtc-tool.line:hover{ border-color:var(--g1); color:var(--g1); }
+.rtc-record{ display:none; background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:16px; box-shadow:var(--sh); margin-top:12px; }
+.rtc-record.show{ display:block; }
+.rtc-record-head{ display:flex; align-items:center; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+.rtc-record-head .ic{ font-size:26px; }
+.rtc-record-head h4{ font-family:'Gaegu',cursive; font-size:18px; color:var(--g1); }
+.rtc-record-body{ font-size:13.5px; line-height:1.8; color:var(--text); }
+.rtc-record-body p{ margin-bottom:6px; }
+.rtc-record-body strong{ color:var(--g1); }
+.rtc-err{ background:#FFF5F5; border:1px solid #FECACA; border-radius:12px; padding:10px 12px; font-size:12.5px; color:#7F1D1D; line-height:1.5; margin-top:8px; }
+body.rtc-lock{ overflow:hidden; }
+
+@media (max-width:768px),(orientation:portrait) and (max-width:1440px){
+  .rtc-launcher{ font-size:14px; padding:13px 9px; }
+  .rtc-launcher .rtc-launcher-emoji{ font-size:17px; }
+  .rtc-drawer{ width:100%; max-width:100vw; }
+}
+</style>
 </head>
+
 <body>
 
 <!-- 인트로 화면 -->
@@ -537,7 +671,104 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- ===== 실시간 관찰 챗봇 런처 ===== -->
+<button class="rtc-launcher" onclick="RTC.open()" aria-label="실시간 챗봇과 대화하기">
+  <span class="rtc-launcher-emoji">💬</span>실시간 챗봇과 대화하기
+</button>
+
+<!-- ===== 실시간 관찰 챗봇 드로어 ===== -->
+<div class="rtc-overlay" id="rtcOverlay" onclick="RTC.close()"></div>
+<div class="rtc-drawer" id="rtcDrawer" role="dialog" aria-label="실시간 관찰 챗봇">
+  <div class="rtc-head">
+    <span class="rtc-head-ic">🔬</span>
+    <div>
+      <h3>실시간 관찰 도우미</h3>
+      <p>현미경을 보면서 한 걸음씩 관찰해요</p>
+    </div>
+    <button class="rtc-close" onclick="RTC.close()" aria-label="닫기">✕</button>
+  </div>
+
+  <div class="rtc-body">
+
+    <!-- 설정 -->
+    <div id="rtcSetup">
+      <div class="rtc-setup-card">
+        <div class="rtc-setup-title"><span class="dot"></span>무엇을 관찰할 거예요?</div>
+        <div class="rtc-chips" id="rtcTargetChips">
+          <div class="rtc-chip selected" data-target="haecam">🌿 해캄</div>
+          <div class="rtc-chip" data-target="jipsin">🦠 짚신벌레</div>
+          <div class="rtc-chip" data-target="both">둘 다 볼래요</div>
+        </div>
+      </div>
+
+      <div class="rtc-setup-card">
+        <div class="rtc-setup-title"><span class="dot"></span>지금 보이는 모습 (선택)</div>
+        <div class="rtc-upload" id="rtcUpload"
+             ondragover="RTC.dragOver(event)" ondragleave="RTC.dragLeave(event)" ondrop="RTC.drop(event)">
+          <div id="rtcUploadInner">
+            <p>현미경 화면을 올리면<br>AI가 같이 보면서 물어봐요</p>
+            <div class="rtc-upbtn-row">
+              <button class="rtc-btn-cam" onclick="document.getElementById('rtcCamera').click()">📸 사진</button>
+              <button class="rtc-btn-album" onclick="document.getElementById('rtcAlbum').click()">📁 앨범</button>
+            </div>
+          </div>
+          <input type="file" id="rtcCamera" accept="image/*" capture="environment" style="display:none" onchange="RTC.fileSelect(event)">
+          <input type="file" id="rtcAlbum" accept="image/*" style="display:none" onchange="RTC.fileSelect(event)">
+          <div class="rtc-preview" id="rtcPreview">
+            <img id="rtcPreviewImg" src="" alt="관찰 미리보기">
+            <button onclick="RTC.clearImage()">🗑 다시 선택</button>
+          </div>
+        </div>
+        <div class="rtc-opt-note">사진이 없어도 괜찮아요! 말로 답해도 돼요 😊</div>
+      </div>
+
+      <button class="rtc-start" onclick="RTC.start()">🚀 관찰 시작하기</button>
+    </div>
+
+    <!-- 관찰 진행 -->
+    <div id="rtcObserve" style="display:none; flex:1; flex-direction:column;">
+      <div class="rtc-checklist">
+        <div class="rtc-cl-head">
+          <span class="t">🔍 관찰 진행표</span>
+          <span class="c" id="rtcClCount">0 / 0</span>
+        </div>
+        <div class="rtc-cl-bar"><div class="rtc-cl-fill" id="rtcClFill"></div></div>
+        <div class="rtc-cl-items" id="rtcClItems"></div>
+      </div>
+
+      <div class="rtc-chat-card">
+        <div class="rtc-chatlog" id="rtcChatlog"></div>
+        <div class="rtc-inputrow">
+          <input type="text" id="rtcInput" placeholder="본 것을 적어 보세요..." onkeydown="if(event.key==='Enter') RTC.send()" disabled>
+          <button class="rtc-send" id="rtcSend" onclick="RTC.send()" disabled>➤</button>
+        </div>
+        <div class="rtc-quick" id="rtcQuick">
+          <div class="rtc-quick-chip" onclick="RTC.quick('잘 모르겠어요')">🤔 잘 모르겠어요</div>
+          <div class="rtc-quick-chip" onclick="RTC.quick('안 보여요')">👀 안 보여요</div>
+          <div class="rtc-quick-chip" onclick="RTC.quick('힌트 주세요')">💡 힌트 주세요</div>
+        </div>
+        <div id="rtcChatErr"></div>
+      </div>
+
+      <div class="rtc-record" id="rtcRecord">
+        <div class="rtc-record-head">
+          <span class="ic">📝</span>
+          <div><h4>오늘의 관찰 기록</h4></div>
+        </div>
+        <div class="rtc-record-body" id="rtcRecordBody"></div>
+      </div>
+
+      <div class="rtc-toolrow">
+        <button class="rtc-tool fill" onclick="RTC.makeRecord()">📝 관찰 기록 만들기</button>
+        <button class="rtc-tool line" onclick="RTC.reset()">🔄 다시 관찰</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 </div><!-- end mainApp -->
+
 
 <script>
   let selectedFile = null;
@@ -1044,5 +1275,324 @@ ${focusPrompt}
     setTimeout(() => toast.classList.remove('show'), 2500);
   }
 </script>
+<script>
+/* ============================================================
+   실시간 관찰 챗봇 (독립 모듈) — 기존 전역과 충돌 방지 위해 IIFE
+   기존 앱의 프록시/모델을 동일하게 재사용
+   ============================================================ */
+(function(){
+  const WORKER_URL = 'https://gemini-proxy.tsjeong917.workers.dev';
+  const MODEL = 'claude-sonnet-4-5';
+
+  const CRITERIA = {
+    haecam: {
+      name: '해캄',
+      items: [
+        {label:'색깔', keys:['색깔','색']},
+        {label:'모양', keys:['모양','실']},
+        {label:'마디', keys:['마디']},
+        {label:'점',   keys:['점']}
+      ],
+      guide: `해캄 관찰 기준 (이것만 다뤄요):
+- 색깔이 초록색인지
+- 가늘고 긴 실 모양인지
+- 중간중간에 마디가 있는지
+- 마디 안에 작은 점이 있는지`
+    },
+    jipsin: {
+      name: '짚신벌레',
+      items: [
+        {label:'모양', keys:['모양','짚신']},
+        {label:'점',   keys:['점']},
+        {label:'털',   keys:['털']}
+      ],
+      guide: `짚신벌레 관찰 기준 (이것만 다뤄요! 움직임/양분 절대 금지):
+- 둥글고 길쭉한 모양(짚신 모양)인지
+- 몸 안에 점이 보이는지
+- 몸 가장자리에 짧은 털이 있는지`
+    }
+  };
+
+  let target = 'haecam';
+  let file = null;
+  let imgB64 = null;
+  let convo = [];
+  let checklist = [];
+  let active = false;
+  let busy = false;
+
+  const $ = (id) => document.getElementById(id);
+
+  /* ---------- 드로어 열기/닫기 ---------- */
+  function open(){
+    $('rtcOverlay').classList.add('open');
+    $('rtcDrawer').classList.add('open');
+    document.body.classList.add('rtc-lock');
+  }
+  function close(){
+    $('rtcOverlay').classList.remove('open');
+    $('rtcDrawer').classList.remove('open');
+    document.body.classList.remove('rtc-lock');
+  }
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
+
+  /* ---------- 대상 선택 ---------- */
+  $('rtcTargetChips').addEventListener('click', (e)=>{
+    const chip = e.target.closest('.rtc-chip');
+    if(!chip) return;
+    document.querySelectorAll('#rtcTargetChips .rtc-chip').forEach(c=>c.classList.remove('selected'));
+    chip.classList.add('selected');
+    target = chip.dataset.target;
+  });
+
+  /* ---------- 이미지 업로드 ---------- */
+  function fileSelect(e){ const f=e.target.files[0]; if(f) loadFile(f); }
+  function dragOver(e){ e.preventDefault(); $('rtcUpload').classList.add('dragover'); }
+  function dragLeave(e){ $('rtcUpload').classList.remove('dragover'); }
+  function drop(e){ e.preventDefault(); $('rtcUpload').classList.remove('dragover'); const f=e.dataTransfer.files[0]; if(f && f.type.startsWith('image/')) loadFile(f); }
+  function loadFile(f){
+    file = f;
+    const r = new FileReader();
+    r.onload = (e)=>{
+      $('rtcPreviewImg').src = e.target.result;
+      $('rtcPreview').classList.add('show');
+      $('rtcUploadInner').style.display = 'none';
+    };
+    r.readAsDataURL(f);
+  }
+  function clearImage(){
+    file = null; imgB64 = null;
+    $('rtcCamera').value=''; $('rtcAlbum').value='';
+    $('rtcPreview').classList.remove('show');
+    $('rtcUploadInner').style.display = 'block';
+  }
+  // 기존 앱의 fileToBase64(캔버스 리사이즈)가 있으면 재사용, 없으면 자체 처리
+  function toBase64(f){
+    if (typeof window.fileToBase64 === 'function') return window.fileToBase64(f);
+    return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(f); });
+  }
+
+  /* ---------- 체크리스트 ---------- */
+  function buildChecklist(){
+    checklist = [];
+    const orgs = target==='both' ? ['haecam','jipsin'] : [target];
+    orgs.forEach(org=>{
+      CRITERIA[org].items.forEach(it=>{
+        checklist.push({ ...it, org, orgName:CRITERIA[org].name, done:false });
+      });
+    });
+    renderChecklist();
+  }
+  function renderChecklist(){
+    const both = target==='both';
+    $('rtcClItems').innerHTML = checklist.map(it=>`
+      <span class="rtc-cl-item ${it.done?'done':''}">${it.done?'✓':'○'} ${both?it.orgName+' ':''}${it.label}</span>`).join('');
+    const done = checklist.filter(i=>i.done).length;
+    $('rtcClCount').textContent = `${done} / ${checklist.length}`;
+    $('rtcClFill').style.width = (checklist.length? done/checklist.length*100:0)+'%';
+  }
+  function updateChecklist(observed){
+    const both = target==='both';
+    observed.forEach(obs=>{
+      checklist.forEach(it=>{
+        if(it.done) return;
+        const keyHit = it.keys.some(k=>obs.includes(k));
+        const orgHit = both ? obs.includes(it.orgName) : true;
+        if(keyHit && orgHit) it.done = true;
+      });
+    });
+    renderChecklist();
+  }
+
+  /* ---------- 지시문 ---------- */
+  function buildInstruction(){
+    const both = target==='both';
+    const orgs = both ? ['haecam','jipsin'] : [target];
+    const guideText = orgs.map(o=>CRITERIA[o].guide).join('\n\n');
+    const names = checklist.map(it=> both?`${it.orgName} ${it.label}`:it.label).join(', ');
+    const tagRule = both
+      ? '형식: [관찰됨: 해캄 색깔, 짚신벌레 모양] 처럼 대상 이름을 꼭 붙여요.'
+      : '형식: [관찰됨: 색깔, 모양]';
+    return `당신은 초등학교 4학년 과학 시간에 "${orgs.map(o=>CRITERIA[o].name).join('과(와) ')}"을(를) 현미경(영구표본)으로 관찰하는 학생 옆에서 도와주는 아주 친절한 AI 관찰 선생님이에요. 학생이 스스로 관찰하도록 한 번에 딱 하나씩 질문하며 이끌어 주세요.
+
+[관찰 대상과 관찰 기준 — 이 항목만 다뤄요]
+${guideText}
+
+[대화 규칙]
+- 한 번에 질문은 딱 하나만. 짧고 쉽게(초등 4학년 수준).
+- 학생의 답을 먼저 따뜻하게 인정해 주고, 아직 살펴보지 않은 관찰 기준 중 하나로 자연스럽게 안내해요.
+- 학생이 "몰라요/안 보여요/힌트 주세요"라고 하면 어디를 어떻게 보면 좋을지 힌트를 줘요. 정답을 바로 말하지 말기.
+- 움직임(헤엄, 이동, 천천히 움직임, 어느 쪽으로 가는지, 털의 움직임 등)은 절대 언급 금지. 영구표본이라 움직이지 않아요.
+- 양분을 얻는 방법 언급 금지. "엽록체·핵·세포·수축포·대핵·소핵·나선" 같은 어려운 말 절대 금지.
+- 마크다운 # 기호 금지. 이모지는 한 번에 1개 정도만. 대답은 2~3문장을 넘지 않게 짧게.
+
+[진행 표시 규칙 — 매우 중요]
+- 매 답변의 맨 끝 줄에, 지금까지 학생이 "직접 말로 설명한" 관찰 항목만 아래 형식으로 적어요.
+  ${tagRule}
+  (쓸 수 있는 항목 이름: ${names})
+- 학생이 아직 설명하지 않은 항목은 넣지 말고, 학생이 말한 것만 누적해서 적어요.
+- 모든 관찰 기준을 학생이 설명했다면, 칭찬으로 마무리하고 맨 끝에 [관찰완료] 를 적어요.
+
+지금부터 시작할게요. 학생에게 따뜻한 인사와 함께 첫 번째 관찰 질문을 딱 하나만 해주세요.${file?' 학생이 올린 사진을 참고하되, 정답을 알려주지 말고 학생이 직접 보게 유도해요.':''}`;
+  }
+
+  /* ---------- 세션 시작 ---------- */
+  async function start(){
+    buildChecklist();
+    if(file){ try{ imgB64 = await toBase64(file); }catch(e){ imgB64=null; } }
+    const instruction = buildInstruction();
+    if(imgB64){
+      convo = [{ role:'user', content:[
+        { type:'image', source:{ type:'base64', media_type:'image/jpeg', data:imgB64 } },
+        { type:'text', text:instruction }
+      ]}];
+    } else {
+      convo = [{ role:'user', content:[{ type:'text', text:instruction }] }];
+    }
+    $('rtcSetup').style.display = 'none';
+    $('rtcObserve').style.display = 'flex';
+    active = true;
+    if(file) addMsg('me','', $('rtcPreviewImg').src);
+    await callAI();
+  }
+
+  /* ---------- 답변 ---------- */
+  function quick(t){ $('rtcInput').value=t; send(); }
+  async function send(){
+    if(busy || !active) return;
+    const input = $('rtcInput');
+    const t = input.value.trim();
+    if(!t) return;
+    input.value='';
+    addMsg('me', t);
+    convo.push({ role:'user', content:[{ type:'text', text:t }] });
+    await callAI();
+  }
+
+  /* ---------- AI 호출 ---------- */
+  async function callAI(){
+    busy = true; setEnabled(false);
+    $('rtcChatErr').innerHTML='';
+    const typing = addTyping();
+    try{
+      const res = await fetch(WORKER_URL, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ model:MODEL, max_tokens:700, messages:convo })
+      });
+      const data = await res.json();
+      if(data?.error) throw new Error(data.error.message || data.error.type || '오류가 발생했어요');
+      const raw = data?.content?.[0]?.text || '';
+      if(!raw) throw new Error('답을 받지 못했어요. 다시 해볼까요?');
+      convo.push({ role:'assistant', content:raw });
+      const {clean, observed, done} = parseTags(raw);
+      updateChecklist(observed);
+      typing.remove();
+      addMsg('ai', clean);
+      if(done || checklist.every(i=>i.done)) finish();
+    }catch(err){
+      typing.remove();
+      $('rtcChatErr').innerHTML = `<div class="rtc-err">문제가 생겼어요: ${err.message}<br>인터넷 연결과 사진 크기를 확인하고 다시 해봐요.</div>`;
+    }finally{
+      busy=false;
+      if(active) setEnabled(true);
+      scroll();
+    }
+  }
+
+  function parseTags(text){
+    let observed=[];
+    const m = text.match(/\[관찰됨:\s*([^\]]*)\]/);
+    if(m) observed = m[1].split(',').map(s=>s.trim()).filter(Boolean);
+    const done = /\[관찰완료\]/.test(text);
+    const clean = text.replace(/\[관찰됨:[^\]]*\]/g,'').replace(/\[관찰완료\]/g,'').replace(/^#{1,6}\s+/gm,'').trim();
+    return {clean, observed, done};
+  }
+
+  function finish(){
+    active = false;
+    setEnabled(false);
+    $('rtcInput').placeholder = '관찰을 모두 마쳤어요! 🎉';
+    $('rtcQuick').style.display = 'none';
+  }
+
+  /* ---------- 관찰 기록 만들기 ---------- */
+  async function makeRecord(){
+    if(busy || convo.length < 2) return;
+    busy = true;
+    const card = $('rtcRecord'), body = $('rtcRecordBody');
+    card.classList.add('show');
+    body.innerHTML = '<div class="rtc-typing"><span></span><span></span><span></span></div>';
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    const req = { role:'user', content:[{ type:'text', text:`지금까지 학생과 나눈 관찰 대화를 바탕으로, 학생이 "직접 관찰해서 말한 내용"만 모아 관찰 기록으로 정리해 주세요.
+규칙:
+- 관찰한 대상별로 짧은 문장 2~4개로 정리 (예: "색깔은 초록색이에요.").
+- 학생이 말하지 않은 내용은 지어내지 말고, 아직 못 본 항목이 있으면 마지막에 "다음에는 ○○도 살펴보면 좋아요."라고 딱 한 줄 덧붙여요.
+- 움직임/양분/어려운 용어 금지. 초등 4학년 말투. 마크다운 # 금지.
+- 각 문장은 줄바꿈으로 구분해 주세요.` }] };
+    try{
+      const res = await fetch(WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ model:MODEL, max_tokens:800, messages:[...convo, req] }) });
+      const data = await res.json();
+      if(data?.error) throw new Error(data.error.message || '오류가 발생했어요');
+      const text = (data?.content?.[0]?.text||'').replace(/^#{1,6}\s+/gm,'').trim();
+      body.innerHTML = fmt(text);
+    }catch(err){
+      body.innerHTML = `<div class="rtc-err">기록을 못 만들었어요: ${err.message}</div>`;
+    }finally{ busy=false; }
+  }
+
+  /* ---------- UI helpers ---------- */
+  function addMsg(role, text, imgSrc){
+    const log = $('rtcChatlog');
+    const div = document.createElement('div');
+    div.className = `rtc-msg ${role}`;
+    let inner = `<div class="rtc-avatar">${role==='ai'?'🔬':'🙂'}</div><div class="rtc-bubble">`;
+    if(text) inner += fmt(text);
+    if(imgSrc) inner += `<img class="thumb" src="${imgSrc}" alt="내가 올린 사진">`;
+    inner += `</div>`;
+    div.innerHTML = inner;
+    log.appendChild(div); scroll();
+    return div;
+  }
+  function addTyping(){
+    const log = $('rtcChatlog');
+    const div = document.createElement('div');
+    div.className = 'rtc-msg ai';
+    div.innerHTML = `<div class="rtc-avatar">🔬</div><div class="rtc-bubble"><div class="rtc-typing"><span></span><span></span><span></span></div></div>`;
+    log.appendChild(div); scroll();
+    return div;
+  }
+  function fmt(text){
+    return text
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\n{2,}/g,'</p><p>').replace(/\n/g,'<br>')
+      .replace(/^/,'<p>').replace(/$/,'</p>');
+  }
+  function setEnabled(on){
+    $('rtcInput').disabled = !on;
+    $('rtcSend').disabled = !on;
+    if(on) $('rtcInput').focus();
+  }
+  function scroll(){ const l=$('rtcChatlog'); l.scrollTop = l.scrollHeight; }
+
+  /* ---------- 다시 관찰 (드로어 내부만 초기화) ---------- */
+  function reset(){
+    file=null; imgB64=null; convo=[]; checklist=[]; active=false; busy=false;
+    $('rtcChatlog').innerHTML=''; $('rtcChatErr').innerHTML='';
+    $('rtcRecord').classList.remove('show'); $('rtcRecordBody').innerHTML='';
+    $('rtcQuick').style.display='flex';
+    $('rtcInput').placeholder='본 것을 적어 보세요...';
+    $('rtcObserve').style.display='none';
+    $('rtcSetup').style.display='block';
+    clearImage();
+  }
+
+  /* ---------- 외부 노출 ---------- */
+  window.RTC = { open, close, start, send, quick, makeRecord, reset,
+    fileSelect, dragOver, dragLeave, drop, clearImage };
+})();
+</script>
 </body>
+
 </html>
