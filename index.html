@@ -487,6 +487,7 @@
 }
 .rtc-launcher:hover{ padding-right:18px; filter:brightness(1.06); }
 .rtc-launcher .rtc-launcher-emoji{ writing-mode:horizontal-tb; font-size:20px; }
+.rtc-launcher .tcy{ text-combine-upright: all; -webkit-text-combine: horizontal; }
 
 /* 왼쪽 런처 (실시간 AI 선생님) */
 .rtc-launcher.left{ right:auto; left:0; border-radius:0 16px 16px 0; background:var(--t-grad); box-shadow:6px 6px 22px -6px rgba(13,148,136,0.5); }
@@ -738,7 +739,7 @@ body.rtc-lock{ overflow:hidden; }
 <!-- ===== 실시간 도우미 런처 (좌: AI 선생님 / 우: 관찰 도우미) ===== -->
 <div class="rtc-launchbar">
   <button class="rtc-launcher left" onclick="openAskDrawer()" aria-label="AI 챗봇 선생님">
-    <span class="rtc-launcher-emoji">🙋</span>AI 챗봇 선생님
+    <span class="rtc-launcher-emoji">🙋</span><span class="tcy">AI</span> 챗봇 선생님
   </button>
   <button class="rtc-launcher" onclick="RTC.open()" aria-label="실시간 관찰 도우미">
     <span class="rtc-launcher-emoji">🔬</span>실시간 관찰 도우미
