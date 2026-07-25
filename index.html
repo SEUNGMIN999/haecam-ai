@@ -480,7 +480,7 @@
   border:none; border-radius:16px 0 0 16px;
   padding:16px 12px; cursor:pointer;
   writing-mode:vertical-rl; text-orientation:mixed;
-  font-family:'Gaegu',cursive; font-size:17px; letter-spacing:1px;
+  font-family:'Pretendard','Noto Sans KR',sans-serif; font-weight:800; font-size:15px; letter-spacing:0.5px;
   box-shadow:-6px 6px 22px -6px rgba(27,107,58,0.5);
   transition:padding 0.18s var(--ease), filter 0.18s var(--ease);
   display:flex; align-items:center; gap:8px;
@@ -498,7 +498,7 @@
 .rtc-head.teal{ background:var(--t-grad); }
 
 /* 활동지 분석 도우미 모드 제목 */
-.mode-title{ display:flex; align-items:center; gap:10px; font-family:'Gaegu',cursive; font-size:22px; color:var(--g1); margin:4px 4px 14px; letter-spacing:-0.2px; }
+.mode-title{ display:flex; align-items:center; gap:10px; font-family:'Pretendard','Noto Sans KR',sans-serif; font-weight:800; font-size:19px; color:var(--g1); margin:4px 4px 14px; letter-spacing:-0.3px; }
 .mode-title .mt-line{ flex:1; height:2px; background:var(--g4); border-radius:2px; }
 
 .rtc-overlay{
@@ -737,8 +737,8 @@ body.rtc-lock{ overflow:hidden; }
 
 <!-- ===== 실시간 도우미 런처 (좌: AI 선생님 / 우: 관찰 도우미) ===== -->
 <div class="rtc-launchbar">
-  <button class="rtc-launcher left" onclick="openAskDrawer()" aria-label="실시간 AI 선생님과 대화하기">
-    <span class="rtc-launcher-emoji">🙋</span>실시간 AI 선생님과 대화하기
+  <button class="rtc-launcher left" onclick="openAskDrawer()" aria-label="AI 챗봇 선생님">
+    <span class="rtc-launcher-emoji">🙋</span>AI 챗봇 선생님
   </button>
   <button class="rtc-launcher" onclick="RTC.open()" aria-label="실시간 관찰 도우미">
     <span class="rtc-launcher-emoji">🔬</span>실시간 관찰 도우미
@@ -751,7 +751,7 @@ body.rtc-lock{ overflow:hidden; }
   <div class="rtc-head teal">
     <span class="rtc-head-ic">🙋</span>
     <div>
-      <h3>실시간 AI 선생님</h3>
+      <h3>AI 챗봇 선생님</h3>
       <p>해캄·짚신벌레가 궁금하면 물어봐요</p>
     </div>
     <button class="rtc-close" onclick="closeAskDrawer()" aria-label="닫기">✕</button>
